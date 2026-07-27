@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kit de Resposta de Reserva — Comando Próprio</title>
+<meta name="theme-color" content="#18140F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kit de Reserva">
+<meta name="description" content="Scripts prontos de resposta para reservas em restaurantes de conceito.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --ink:#18140F;
+  --ink-2:#211C16;
+  --ink-3:#2A241C;
+  --cream:#F2ECE4;
+  --muted:#9A9186;
+  --ember:#FF5A1F;
+  --gold:#D9A441;
+  --hair:#38312A;
+  --radius:10px;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+html{-webkit-text-size-adjust:100%}
+
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--cream);
+  font-family:"Inter",system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  padding-bottom:56px;
+}
+
+.wrap{max-width:640px;margin:0 auto;padding:0 18px}
+
+/* ---------- header ---------- */
+
+header{
+  padding:34px 0 20px;
+  border-bottom:1px solid var(--hair);
+}
+
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:14px;
+}
+
+h1{
+  font-family:"Fraunces",Georgia,serif;
+  font-weight:600;
+  font-size:27px;
+  line-height:1.2;
+  margin:0 0 10px;
+  letter-spacing:-.01em;
+}
+
+.sub{
+  color:var(--muted);
+  font-size:14px;
+  margin:0;
+  max-width:34em;
+}
+
+/* ---------- registro toggle ---------- */
+
+.reg-bar{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:var(--ink);
+  padding:14px 0 12px;
+  border-bottom:1px solid var(--hair);
+}
+
+.reg-label{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+
+.seg{
+  display:flex;
+  gap:4px;
+  background:var(--ink-2);
+  border:1px solid var(--hair);
+  border-radius:var(--radius);
+  padding:4px;
+}
+
+.seg button{
+  flex:1;
+  appearance:none;
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  font-family:"Inter",sans-serif;
+  font-size:14px;
+  font-weight:500;
+  padding:9px 8px;
+  border-radius:7px;
+  cursor:pointer;
+  transition:background .15s ease,color .15s ease;
+}
+
+.seg button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+
+.seg button[aria-selected="true"]{
+  background:var(--ember);
+  color:#fff;
+}
+
+.seg small{
+  display:block;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:9px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  opacity:.72;
+  margin-top:2px;
+  font-weight:400;
+}
+
+/* ---------- cenários ---------- */
+
+.cenas{margin-top:8px}
+
+.cena{border-bottom:1px solid var(--hair)}
+
+.cena-head{
+  width:100%;
+  display:flex;
+  align-items:baseline;
+  gap:13px;
+  appearance:none;
+  background:transparent;
+  border:0;
+  color:inherit;
+  text-align:left;
+  padding:19px 0;
+  cursor:pointer;
+  font-family:inherit;
+}
+
+.cena-head:focus-visible{outline:2px solid var(--ember);outline-offset:-2px}
+
+.cena-num{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:12px;
+  font-weight:500;
+  color:var(--ember);
+  flex:0 0 auto;
+  padding-top:2px;
+}
+
+.cena-txt{flex:1 1 auto;min-width:0}
+
+.cena-title{
+  display:block;
+  font-family:"Fraunces",Georgia,serif;
+  font-size:18px;
+  font-weight:600;
+  line-height:1.28;
+}
+
+.cena-sub{
+  display:block;
+  font-size:13px;
+  color:var(--muted);
+  margin-top:2px;
+}
+
+.chev{
+  flex:0 0 auto;
+  width:11px;
+  height:11px;
+  border-right:1.5px solid var(--muted);
+  border-bottom:1.5px solid var(--muted);
+  transform:rotate(45deg);
+  margin-top:6px;
+  transition:transform .2s ease;
+}
+
+.cena-head[aria-expanded="true"] .chev{transform:rotate(-135deg)}
+
+.cena-body{display:none;padding:0 0 24px}
+.cena-head[aria-expanded="true"] + .cena-body{display:block}
+
+/* ---------- scripts ---------- */
+
+.script{display:none}
+body.reg-discreto .script[data-reg="discreto"]{display:block}
+body.reg-caloroso .script[data-reg="caloroso"]{display:block}
+
+.msg{
+  background:var(--ink-2);
+  border:1px solid var(--hair);
+  border-left:2.5px solid var(--ember);
+  border-radius:var(--radius);
+  padding:14px 15px 12px;
+  margin-bottom:11px;
+}
+
+.msg-label{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:9.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:8px;
+}
+
+.msg-text{
+  font-size:15px;
+  line-height:1.62;
+  white-space:pre-wrap;
+  margin:0 0 12px;
+}
+
+.copy{
+  appearance:none;
+  border:1px solid var(--hair);
+  background:var(--ink-3);
+  color:var(--cream);
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:9px 15px;
+  border-radius:7px;
+  cursor:pointer;
+  transition:background .15s ease,border-color .15s ease,color .15s ease;
+}
+
+.copy:hover{border-color:var(--ember)}
+.copy:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+
+.copy.ok{
+  background:var(--ember);
+  border-color:var(--ember);
+  color:#fff;
+}
+
+/* ---------- o que não dizer ---------- */
+
+.nao{
+  margin-top:16px;
+  padding-top:15px;
+  border-top:1px dashed var(--hair);
+}
+
+.nao-label{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:9.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:7px;
+}
+
+.nao p{
+  margin:0;
+  font-size:14px;
+  line-height:1.62;
+  color:#C8BFB2;
+}
+
+.nao em{
+  font-family:"Fraunces",Georgia,serif;
+  font-style:italic;
+  color:var(--cream);
+}
+
+/* ---------- pendentes ---------- */
+
+.cena.pend .cena-num,
+.cena.pend .cena-title{color:#6A6259}
+.cena.pend .cena-sub{color:#5A534B}
+.cena.pend .chev{display:none}
+
+.pend-tag{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:9.5px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:#6A6259;
+  border:1px solid var(--hair);
+  border-radius:5px;
+  padding:4px 8px;
+  flex:0 0 auto;
+  margin-top:3px;
+}
+
+/* ---------- rodapé ---------- */
+
+footer{
+  margin-top:34px;
+  padding-top:22px;
+  border-top:1px solid var(--hair);
+}
+
+.tip{
+  background:var(--ink-2);
+  border:1px solid var(--hair);
+  border-radius:var(--radius);
+  padding:14px 15px;
+  font-size:13.5px;
+  line-height:1.6;
+  color:#C8BFB2;
+  margin-bottom:22px;
+}
+
+.tip strong{color:var(--cream);font-weight:600}
+
+.sig{display:flex;align-items:center;gap:13px;padding-bottom:10px}
+.sig-rule{width:26px;height:2px;background:var(--ember);flex:0 0 auto}
+.sig-name{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:15px}
+.sig-role{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:9.5px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-top:2px;
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+@media (min-width:560px){
+  h1{font-size:31px}
+  .cena-title{font-size:19px}
+}
+
+</style>
+</head>
+<body class="reg-discreto">
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Comando Próprio</div>
+    <h1>Kit de Resposta de Reserva</h1>
+    <p class="sub">Sete momentos da conversa. Escolha o registro da casa, toque no cenário, copie e cole.</p>
+  </header>
+
+  <div class="reg-bar">
+    <div class="reg-label">Registro da casa</div>
+    <div class="seg" role="tablist" aria-label="Registro da casa">
+      <button role="tab" aria-selected="true" data-reg="discreto">
+        Discreto
+        <small>Fine dining</small>
+      </button>
+      <button role="tab" aria-selected="false" data-reg="caloroso">
+        Caloroso
+        <small>Bistrô</small>
+      </button>
+    </div>
+  </div>
+
+  <div class="cenas">
+
+    <!-- 01 -->
+    <article class="cena">
+      <button class="cena-head" aria-expanded="false">
+        <span class="cena-num">01</span>
+        <span class="cena-txt">
+          <span class="cena-title">Primeira resposta</span>
+          <span class="cena-sub">quando o cliente chama</span>
+        </span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="cena-body">
+
+        <div class="script" data-reg="discreto">
+          <div class="msg">
+            <div class="msg-label">Mensagem completa</div>
+            <p class="msg-text">Olá, [nome]. Que bom receber sua mensagem.
+
+Para [dia], tenho mesa às 20h e às 20h30. Para quantas pessoas seria? Já deixo reservado no seu nome.</p>
+            <button class="copy">Copiar</button>
+          </div>
+          <div class="msg">
+            <div class="msg-label">Versão curta — no meio do serviço</div>
+            <p class="msg-text">Olá, [nome]. Para [dia] tenho 20h e 20h30. Para quantas pessoas?</p>
+            <button class="copy">Copiar</button>
+          </div>
+        </div>
+
+        <div class="script" data-reg="caloroso">
+          <div class="msg">
+            <div class="msg-label">Mensagem completa</div>
+            <p class="msg-text">Oi, [nome]! Obrigado por chamar.
+
+Pra [dia] eu tenho mesa às 20h ou 20h30 — qual funciona melhor pra vocês? Me diz quantas pessoas que já deixo reservado.</p>
+            <button class="copy">Copiar</button>
+          </div>
+          <div class="msg">
+            <div class="msg-label">Versão curta — no meio do serviço</div>
+            <p class="msg-text">Oi, [nome]! Pra [dia] tenho 20h e 20h30 — quantas pessoas?</p>
+            <button class="copy">Copiar</button>
+          </div>
+        </div>
+
+        <div class="nao">
+          <div class="nao-label">O que não dizer</div>
+          <p>Não responda só <em>"Oi, tudo bem?"</em>. Devolver a bola sem informação obriga o cliente a puxar a conversa de novo — e é exatamente aí que a maioria some. Toda resposta sua carrega duas coisas: uma opção concreta e uma pergunta só.</p>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- 02 -->
+    <article class="cena">
+      <button class="cena-head" aria-expanded="false">
+        <span class="cena-num">02</span>
+        <span class="cena-txt">
+          <span class="cena-title">Informar o preço</span>
+          <span class="cena-sub">sem constrangimento e sem perder a conversa</span>
+        </span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="cena-body">
+
+        <div class="script" data-reg="discreto">
+          <div class="msg">
+            <div class="msg-label">Mensagem completa</div>
+            <p class="msg-text">O menu é composto por [X] tempos e está em R$ [valor] por pessoa. A harmonização é opcional, por R$ [valor].
+
+Reservo para [dia] às 20h?</p>
+            <button class="copy">Copiar</button>
+          </div>
+          <div class="msg">
+            <div class="msg-label">Versão curta — no meio do serviço</div>
+            <p class="msg-text">São [X] tempos, R$ [valor] por pessoa. Reservo para [dia]?</p>
+            <button class="copy">Copiar</button>
+          </div>
+        </div>
+
+        <div class="script" data-reg="caloroso">
+          <div class="msg">
+            <div class="msg-label">Mensagem completa</div>
+            <p class="msg-text">O menu são [X] tempos, R$ [valor] por pessoa — e tem a opção de harmonização por mais R$ [valor], se vocês quiserem.
+
+Posso deixar reservado pra [dia] às 20h?</p>
+            <button class="copy">Copiar</button>
+          </div>
+          <div class="msg">
+            <div class="msg-label">Versão curta — no meio do serviço</div>
+            <p class="msg-text">São [X] tempos, R$ [valor] por pessoa. Deixo reservado pra [dia]?</p>
+            <button class="copy">Copiar</button>
+          </div>
+        </div>
+
+        <div class="nao">
+          <div class="nao-label">O que não dizer</div>
+          <p>Nunca <em>"infelizmente é R$ [valor]"</em>. Pedir desculpa pelo preço ensina o cliente a achar caro. E não mande o número sozinho: preço sem o que ele inclui e sem pergunta de fechamento é a mensagem mais fácil do mundo de não responder.</p>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- 03 -->
+    <article class="cena">
+      <button class="cena-head" aria-expanded="false">
+        <span class="cena-num">03</span>
+        <span class="cena-txt">
+          <span class="cena-title">Explicar a experiência</span>
+          <span class="cena-sub">o que é o menu degustação</span>
+        </span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="cena-body">
+
+        <div class="script" data-reg="discreto">
+          <div class="msg">
+            <div class="msg-label">Mensagem completa</div>
+            <p class="msg-text">O menu é uma sequência de [X] tempos, servida para toda a mesa, com duração aproximada de [X] horas. Não há escolha à la carte — a sequência é pensada como um percurso, do mais leve ao mais intenso.
+
+Se houver alguma restrição alimentar, me avise agora que adapto com antecedência.</p>
+            <button class="copy">Copiar</button>
+          </div>
+          <div class="msg">
+            <div class="msg-label">Versão curta — no meio do serviço</div>
+            <p class="msg-text">São [X] tempos servidos para a mesa, cerca de [X] horas. Alguma restrição alimentar?</p>
+            <button class="copy">Copiar</button>
+          </div>
+        </div>
+
+        <div class="script" data-reg="caloroso">
+          <div class="msg">
+            <div class="msg-label">Mensagem completa</div>
+            <p class="msg-text">O menu é uma sequência de [X] pratos que a gente serve pra mesa inteira, leva mais ou menos [X] horas. Não tem cardápio pra escolher — a gente monta o percurso, do mais leve pro mais intenso.
+
+Se alguém tiver restrição alimentar, me fala agora que eu adapto sem problema.</p>
+            <button class="copy">Copiar</button>
+          </div>
+          <div class="msg">
+            <div class="msg-label">Versão curta — no meio do serviço</div>
+            <p class="msg-text">São [X] pratos servidos pra mesa, umas [X] horas. Alguém tem restrição alimentar?</p>
+            <button class="copy">Copiar</button>
+          </div>
+        </div>
+
+        <div class="nao">
+          <div class="nao-label">O que não dizer</div>
+          <p>Não venda o menu pela lista de ingredientes. Descrever pratos antes de o cliente entender o formato só gera dúvida. Primeiro o formato — quantos tempos, quanto tempo dura, servido para a mesa — e só depois, se ele perguntar, os pratos. E nunca prometa <em>"vocês vão sair satisfeitos"</em>: quem pergunta isso está com medo de passar fome, e o que tranquiliza é o número de tempos, não uma garantia vaga.</p>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- 04 -->
+    <article class="cena">
+      <button class="cena-head" aria-expanded="false">
+        <span class="cena-num">04</span>
+        <span class="cena-txt">
+          <span class="cena-title">Sem mesa na data pedida</span>
+          <span class="cena-sub">redirecionar para a noite fraca</span>
+        </span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="cena-body">
+
+        <div class="script" data-reg="discreto">
+          <div class="msg">
+            <div class="msg-label">Mensagem completa</div>
+            <p class="msg-text">Para [dia] estamos completos. Tenho mesa na [noite alternativa], no mesmo horário — e é, na minha opinião, a melhor noite para vir: a casa fica mais tranquila e conseguimos dar mais atenção a cada mesa.
+
+Reservo para vocês?</p>
+            <button class="copy">Copiar</button>
+          </div>
+          <div class="msg">
+            <div class="msg-label">Versão curta — no meio do serviço</div>
+            <p class="msg-text">[Dia] está completo. Tenho [noite alternativa] no mesmo horário — casa mais tranquila, atenção melhor. Reservo?</p>
+            <button class="copy">Copiar</button>
+          </div>
+        </div>
+
+        <div class="script" data-reg="caloroso">
+          <div class="msg">
+            <div class="msg-label">Mensagem completa</div>
+            <p class="msg-text">Pra [dia] a gente já está lotado. Mas tenho mesa na [noite alternativa], no mesmo horário — e sinceramente é a melhor noite pra vir: a casa fica mais tranquila e a gente consegue cuidar melhor de cada mesa.
+
+Deixo reservado pra vocês?</p>
+            <button class="copy">Copiar</button>
+          </div>
+          <div class="msg">
+            <div class="msg-label">Versão curta — no meio do serviço</div>
+            <p class="msg-text">[Dia] tá lotado. Tenho [noite alternativa] no mesmo horário, casa mais tranquila. Deixo reservado?</p>
+            <button class="copy">Copiar</button>
+          </div>
+        </div>
+
+        <div class="nao">
+          <div class="nao-label">O que não dizer</div>
+          <p>Não pare em <em>"infelizmente estamos lotados"</em>. Essa frase encerra a conversa e devolve o cliente para o concorrente — é a maior fonte de reserva perdida que existe, e não aparece em relatório nenhum, porque ninguém registra a mesa que não foi vendida. Toda recusa carrega uma alternativa concreta: dia, horário e um motivo real para ela ser boa.</p>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- 05 -->
+    <article class="cena">
+      <button class="cena-head" aria-expanded="false">
+        <span class="cena-num">05</span>
+        <span class="cena-txt">
+          <span class="cena-title">Fechar agora</span>
+          <span class="cena-sub">em vez de "depois eu vejo"</span>
+        </span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="cena-body">
+
+        <div class="script" data-reg="discreto">
+          <div class="msg">
+            <div class="msg-label">Mensagem completa</div>
+            <p class="msg-text">Claro. Posso segurar a mesa de [dia] às 20h até amanhã às [hora] — depois disso preciso liberar para a lista de espera.
+
+Se confirmar antes, é só me mandar um "confirmo" que já registro.</p>
+            <button class="copy">Copiar</button>
+          </div>
+          <div class="msg">
+            <div class="msg-label">Versão curta — no meio do serviço</div>
+            <p class="msg-text">Seguro a mesa de [dia] às 20h até amanhã às [hora]. Se quiser, me manda um "confirmo".</p>
+            <button class="copy">Copiar</button>
+          </div>
+        </div>
+
+        <div class="script" data-reg="caloroso">
+          <div class="msg">
+            <div class="msg-label">Mensagem completa</div>
+            <p class="msg-text">Claro! Consigo segurar a mesa de [dia] às 20h até amanhã às [hora] — depois disso preciso liberar pra lista de espera.
+
+Se der certo antes, me manda só um "confirmo" que eu registro na hora.</p>
+            <button class="copy">Copiar</button>
+          </div>
+          <div class="msg">
+            <div class="msg-label">Versão curta — no meio do serviço</div>
+            <p class="msg-text">Seguro a mesa de [dia] às 20h até amanhã [hora]. É só me mandar um "confirmo".</p>
+            <button class="copy">Copiar</button>
+          </div>
+        </div>
+
+        <div class="nao">
+          <div class="nao-label">O que não dizer</div>
+          <p>Não invente escassez que não existe. <em>"Últimas duas mesas!"</em> numa casa que está com o salão vazio é o tipo de coisa que o cliente descobre ao chegar — e você perde a confiança que levou anos para construir. O prazo de retenção funciona justamente porque é verdadeiro: segurar mesa tem custo real. Diga o prazo e cumpra o prazo.</p>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- 06 -->
+    <article class="cena">
+      <button class="cena-head" aria-expanded="false">
+        <span class="cena-num">06</span>
+        <span class="cena-txt">
+          <span class="cena-title">Reativar quem sumiu</span>
+          <span class="cena-sub">conversa parada há dias</span>
+        </span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="cena-body">
+
+        <div class="script" data-reg="discreto">
+          <div class="msg">
+            <div class="msg-label">Mensagem completa</div>
+            <p class="msg-text">[Nome], boa tarde. Retomo aqui a nossa conversa sobre [dia].
+
+Ainda tenho mesa para [nova data] às 20h. Se preferir outra data, me diga qual que eu verifico a disponibilidade.</p>
+            <button class="copy">Copiar</button>
+          </div>
+          <div class="msg">
+            <div class="msg-label">Versão curta — no meio do serviço</div>
+            <p class="msg-text">[Nome], boa tarde. Ainda tenho mesa para [nova data] às 20h, se ainda fizer sentido.</p>
+            <button class="copy">Copiar</button>
+          </div>
+        </div>
+
+        <div class="script" data-reg="caloroso">
+          <div class="msg">
+            <div class="msg-label">Mensagem completa</div>
+            <p class="msg-text">Oi, [nome]! Voltando aqui na nossa conversa sobre [dia].
+
+Ainda tenho mesa pra [nova data] às 20h. Se preferir outro dia, me fala qual que eu vejo aqui.</p>
+            <button class="copy">Copiar</button>
+          </div>
+          <div class="msg">
+            <div class="msg-label">Versão curta — no meio do serviço</div>
+            <p class="msg-text">Oi, [nome]! Ainda tenho mesa pra [nova data] às 20h, se ainda rolar.</p>
+            <button class="copy">Copiar</button>
+          </div>
+        </div>
+
+        <div class="nao">
+          <div class="nao-label">O que não dizer</div>
+          <p>Nada de <em>"sumiu, hein?"</em> ou <em>"vi que você não respondeu"</em>. Cobrança, mesmo em tom leve, coloca o cliente na defensiva — e ele responde não respondendo de novo. E não repita a mensagem anterior: se ela não funcionou da primeira vez, não vai funcionar na segunda. Traga informação nova — uma data, um horário, algo que mudou.</p>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- 07 -->
+    <article class="cena">
+      <button class="cena-head" aria-expanded="false">
+        <span class="cena-num">07</span>
+        <span class="cena-txt">
+          <span class="cena-title">Depois da refeição</span>
+          <span class="cena-sub">dar motivo concreto de voltar</span>
+        </span>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="cena-body">
+
+        <div class="script" data-reg="discreto">
+          <div class="msg">
+            <div class="msg-label">Mensagem completa</div>
+            <p class="msg-text">[Nome], obrigado pela visita de ontem. Foi um prazer receber vocês.
+
+A partir de [mês] entra o menu de [estação ou ingrediente] — é uma troca completa da sequência. Se quiser, aviso você quando abrirem as reservas.</p>
+            <button class="copy">Copiar</button>
+          </div>
+          <div class="msg">
+            <div class="msg-label">Versão curta — no meio do serviço</div>
+            <p class="msg-text">[Nome], obrigado pela visita. Em [mês] troca o menu inteiro — quer que eu avise quando abrir?</p>
+            <button class="copy">Copiar</button>
+          </div>
+        </div>
+
+        <div class="script" data-reg="caloroso">
+          <div class="msg">
+            <div class="msg-label">Mensagem completa</div>
+            <p class="msg-text">[Nome], obrigado pela visita de ontem! Foi muito bom receber vocês.
+
+A partir de [mês] entra o menu de [estação ou ingrediente] — troca a sequência inteira. Quer que eu te avise quando abrirem as reservas?</p>
+            <button class="copy">Copiar</button>
+          </div>
+          <div class="msg">
+            <div class="msg-label">Versão curta — no meio do serviço</div>
+            <p class="msg-text">[Nome], obrigado pela visita! Em [mês] troca o menu todo — te aviso quando abrir?</p>
+            <button class="copy">Copiar</button>
+          </div>
+        </div>
+
+        <div class="nao">
+          <div class="nao-label">O que não dizer</div>
+          <p><em>"Volte sempre!"</em> não é motivo de voltar, é educação. O cliente já gostou — o que falta é uma data e um acontecimento: menu novo, ingrediente de estação, jantar a quatro mãos. Qualquer coisa com dia marcado. E não peça avaliação no Google na mesma mensagem: você tem uma chance de pedir algo, gaste ela no retorno, que vale mais.</p>
+        </div>
+
+      </div>
+    </article>
+
+  </div>
+
+  <footer>
+    <div class="tip">
+      <strong>Deixe na tela inicial do celular.</strong> No iPhone, toque em Compartilhar e depois em "Adicionar à Tela de Início". No Android, no menu do navegador, "Adicionar à tela inicial". Abre como aplicativo, sem precisar procurar o link.
+    </div>
+    <div class="sig">
+      <div class="sig-rule"></div>
+      <div>
+        <div class="sig-name">Pedro Wolff</div>
+        <div class="sig-role">Chef &amp; consultor · Comando Próprio</div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+
+  var body = document.body;
+
+  /* registro */
+  var tabs = document.querySelectorAll('.seg button');
+  Array.prototype.forEach.call(tabs, function(tab){
+    tab.addEventListener('click', function(){
+      Array.prototype.forEach.call(tabs, function(t){
+        t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+      });
+      body.className = 'reg-' + tab.getAttribute('data-reg');
+    });
+  });
+
+  /* acordeão */
+  var heads = document.querySelectorAll('.cena-head:not([disabled])');
+  Array.prototype.forEach.call(heads, function(head){
+    head.addEventListener('click', function(){
+      var open = head.getAttribute('aria-expanded') === 'true';
+      head.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+  });
+
+  /* copiar */
+  var buttons = document.querySelectorAll('.copy');
+  Array.prototype.forEach.call(buttons, function(btn){
+    btn.addEventListener('click', function(){
+      var text = btn.parentNode.querySelector('.msg-text').innerText;
+
+      function done(){
+        btn.textContent = 'Copiado';
+        btn.classList.add('ok');
+        setTimeout(function(){
+          btn.textContent = 'Copiar';
+          btn.classList.remove('ok');
+        }, 1600);
+      }
+
+      function fallback(){
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly','');
+        ta.style.position = 'absolute';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done(); }
+        catch(e){ btn.textContent = 'Selecione e copie'; }
+        document.body.removeChild(ta);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(fallback);
+      } else {
+        fallback();
+      }
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>

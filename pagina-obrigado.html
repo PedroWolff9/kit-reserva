@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Seu guia está pronto — Comando Próprio</title>
+<meta name="theme-color" content="#18140F">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --ink:#18140F; --ink-2:#211C16; --ink-3:#2A241C;
+  --cream:#F2ECE4; --muted:#9A9186; --soft:#C8BFB2;
+  --ember:#FF5A1F; --gold:#D9A441; --hair:#38312A;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--ink);color:var(--cream);
+  font-family:"Inter",system-ui,sans-serif;font-size:16px;line-height:1.65;
+}
+.wrap{max-width:640px;margin:0 auto;padding:0 20px}
+
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold);
+}
+.rule{width:44px;height:3px;background:var(--ember);margin:16px 0 24px}
+
+.hero{padding:48px 0 30px}
+h1{
+  font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:32px;
+  line-height:1.15;letter-spacing:-.018em;margin:0 0 14px;
+}
+h1 em{font-style:italic;font-weight:400;color:var(--ember)}
+.lede{font-size:17px;color:var(--soft);margin:0;max-width:29em}
+
+/* download */
+.baixar{
+  display:block;text-align:center;background:var(--ember);color:#fff;
+  text-decoration:none;font-size:16px;font-weight:600;padding:15px 20px;
+  border-radius:9px;margin-top:24px;transition:filter .15s ease;
+}
+.baixar:hover{filter:brightness(1.08)}
+.baixar:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.baixar-nota{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);text-align:center;margin-top:11px;
+}
+
+section{padding:32px 0;border-top:1px solid var(--hair)}
+h2{
+  font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:22px;
+  margin:0 0 14px;letter-spacing:-.01em;
+}
+p{margin:0 0 14px;color:var(--soft)}
+p:last-child{margin-bottom:0}
+p strong{color:var(--cream);font-weight:600}
+
+/* ============================================================
+     ESPAÇO DO VÍDEO
+     Para inserir: apague a div .video-vazio inteira e cole no
+     lugar o embed do YouTube dentro de .video-quadro, assim:
+
+     <div class="video-quadro">
+       <iframe src="https://www.youtube.com/embed/SEU_ID"
+               title="" frameborder="0" allowfullscreen></iframe>
+     </div>
+   ============================================================ -->
+.video-quadro{
+  position:relative;width:100%;padding-top:56.25%;
+  border-radius:12px;overflow:hidden;background:var(--ink-2);
+}
+.video-quadro iframe{
+  position:absolute;top:0;left:0;width:100%;height:100%;border:0;
+}
+.video-vazio{
+  width:100%;padding-top:56.25%;position:relative;
+  border:2px dashed var(--hair);border-radius:12px;background:var(--ink-2);
+}
+.video-vazio span{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:#5F584F;text-align:center;width:100%;
+}
+
+/* exercicio */
+.destaque{
+  background:var(--ink-2);border:1px solid var(--hair);
+  border-left:2.5px solid var(--ember);border-radius:10px;
+  padding:18px 19px;margin-top:16px;
+}
+.destaque-label{
+  font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:9px;
+}
+.destaque p{margin:0;font-size:15.5px}
+
+/* kit */
+.kit-box{
+  background:var(--ink-2);border:1px solid var(--hair);border-radius:12px;
+  padding:22px 20px;margin-top:18px;
+}
+.kit-preco{
+  display:flex;align-items:baseline;gap:10px;margin-bottom:14px;flex-wrap:wrap;
+}
+.kit-preco .v{
+  font-family:"Fraunces",Georgia,serif;font-size:29px;font-weight:600;
+  line-height:1;letter-spacing:-.02em;
+}
+.kit-preco .n{font-size:13px;color:var(--muted)}
+.kit-cta{
+  display:block;text-align:center;background:transparent;color:var(--cream);
+  border:1.5px solid var(--ember);text-decoration:none;font-size:15.5px;
+  font-weight:600;padding:13px 20px;border-radius:9px;transition:background .15s ease;
+}
+.kit-cta:hover{background:var(--ember);color:#fff}
+.kit-cta:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+.autor{display:flex;gap:13px;align-items:center;margin-top:20px}
+.autor-rule{width:26px;height:2px;background:var(--ember);flex:0 0 auto}
+.autor-nome{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:15px}
+.autor-role{
+  font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);margin-top:2px;
+}
+
+footer{
+  padding:26px 0 44px;border-top:1px solid var(--hair);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:#6A6259;
+}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (min-width:600px){h1{font-size:37px}}
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">Pronto</div>
+    <div class="rule"></div>
+    <h1>Seu guia está <em>aqui</em></h1>
+    <p class="lede">Também mandei uma cópia para o seu e-mail, caso queira ler depois.</p>
+
+    <a class="baixar" href="../../guia-cinco-sinais.pdf" target="_blank" rel="noopener">Abrir o guia</a>
+    <div class="baixar-nota">PDF · abre em nova aba</div>
+  </div>
+
+  <section>
+    <h2>Antes de ler</h2>
+
+    <!-- ESPAÇO DO VÍDEO — ver instruções no CSS acima -->
+    <div class="video-vazio"><span>Espaço reservado para o vídeo</span></div>
+
+    <p style="margin-top:18px">Uma sugestão sobre como usar o guia: não leia os cinco sinais de uma vez.</p>
+
+    <div class="destaque">
+      <div class="destaque-label">Faça isto primeiro</div>
+      <p>Vá direto ao <strong>sinal 02</strong> e faça o exercício que ele propõe. Abra suas últimas quinze conversas de reserva e marque, em cada uma, a mensagem exata em que a pessoa parou de responder. Leva vinte minutos e você faz do próprio celular.</p>
+    </div>
+
+    <p style="margin-top:16px">Você vai ver um padrão. Os outros quatro sinais podem esperar até depois disso.</p>
+  </section>
+
+  <section>
+    <h2>Depois do exercício</h2>
+    <p>Quando você enxerga onde as conversas travam, a pergunta seguinte é sempre a mesma: <strong>o que dizer no lugar.</strong></p>
+    <p>Foi para isso que montei o Kit de Resposta de Reserva — 28 mensagens prontas para os sete momentos da conversa, nos dois registros: discreto para fine dining, caloroso para bistrô. Abre no celular, você copia e cola.</p>
+
+    <div class="kit-box">
+      <div class="kit-preco">
+        <div class="v">R$ 17,70</div>
+        <div class="n">pagamento único · acesso imediato</div>
+      </div>
+      <a class="kit-cta" href="../../" target="_blank" rel="noopener">Ver o Kit</a>
+    </div>
+  </section>
+
+  <section>
+    <div class="autor">
+      <div class="autor-rule"></div>
+      <div>
+        <div class="autor-nome">Pedro Wolff</div>
+        <div class="autor-role">Chef &amp; consultor · Comando Próprio</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Comando Próprio · Pedro Wolff</footer>
+
+</div>
+
+</body>
+</html>
